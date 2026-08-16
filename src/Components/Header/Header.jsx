@@ -1,37 +1,44 @@
 import { useState } from "react";
+import {
+  HeaderWrapper,
+  HeaderBlock,
+  HeaderLogo,
+  HeaderNav,
+  HeaderNewButton,
+  HeaderUser,
+} from "./Header.styled";
 import PopUser from "../popups/PopUser/PopUser";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="header">
+    <HeaderWrapper>
       <div className="container">
-        <div className="header__block">
-          <div className="header__logo _show _light">
+        <HeaderBlock>
+          <HeaderLogo>
             <a href="" target="_self">
               <img src="images/logo.png" alt="logo" />
             </a>
-          </div>
+          </HeaderLogo>
           <div className="header__logo _dark">
             <a href="" target="_self">
               <img src="images/logo_dark.png" alt="logo" />
             </a>
           </div>
-          <nav className="header__nav">
-            <button className="header__btn-main-new _hover01" id="btnMainNew">
+          <HeaderNav>
+            <HeaderNewButton>
               <a href="#popNewCard">Создать новую задачу</a>
-            </button>
-            <button className="header__user _hover02"
-            onClick={() => setIsOpen(!isOpen)}>
-            Ivan Ivanov
-            </button>
+            </HeaderNewButton>
+            <HeaderUser onClick={() => setIsOpen(!isOpen)}>
+              Ivan Ivanov
+            </HeaderUser>
 
             {isOpen ? <PopUser /> : null}
-          </nav>
-        </div>
+          </HeaderNav>
+        </HeaderBlock>
       </div>
-    </header>
+    </HeaderWrapper>
   );
 }
 

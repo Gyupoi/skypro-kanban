@@ -1,21 +1,22 @@
 import { cards } from "../../../data";
 import Card from "../Card/Card";
+import { ColumnWrapper, ColumnTitle, Cards } from "./Column.styled";
 
 function Column({ status }) {
   return (
-    <div className="main__column column">
-      <div className="column__title">
-        <p>{status}</p>
-      </div>
+    <ColumnWrapper>
+      <ColumnTitle>
+        <p>Без статуса</p>
+      </ColumnTitle>
 
-      <div className="cards">
+      <Cards>
         {cards
           .filter((card) => card.status === status)
           .map((card) => (
             <Card key={card.id} card={card} />
           ))}
-      </div>
-    </div>
+      </Cards>
+    </ColumnWrapper>
   );
 }
 

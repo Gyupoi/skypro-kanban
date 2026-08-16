@@ -1,5 +1,6 @@
-import { useEffect, useEffectEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import Column from "../Column/Column";
+import { MainWrapper, MainBlock, MainContent } from "./Main.styled";
 
 function Main() {
   const [isLoading, setIsLoading] = useState(true);
@@ -11,10 +12,10 @@ function Main() {
   }, []);
 
   return (
-    <main className="main">
+    <MainWrapper>
       <div className="container">
-        <div className="main__block">
-          <div className="main__content">
+        <MainBlock>
+          <MainContent>
             {isLoading ? (
               <p className="loading">Данные загружаются</p>
             ) : (
@@ -26,10 +27,10 @@ function Main() {
                 <Column status="Готово" />
               </>
             )}
-          </div>
-        </div>
+          </MainContent>
+        </MainBlock>
       </div>
-    </main>
+    </MainWrapper>
   );
 }
 
