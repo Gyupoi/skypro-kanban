@@ -1,6 +1,9 @@
+import { useState } from "react";
 import PopUser from "../popups/PopUser/PopUser";
 
 function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <header className="header">
       <div className="container">
@@ -19,10 +22,12 @@ function Header() {
             <button className="header__btn-main-new _hover01" id="btnMainNew">
               <a href="#popNewCard">Создать новую задачу</a>
             </button>
-            <a href="#user-set-target" className="header__user _hover02">
-              Ivan Ivanov
-            </a>
-            <PopUser />
+            <button className="header__user _hover02"
+            onClick={() => setIsOpen(!isOpen)}>
+            Ivan Ivanov
+            </button>
+
+            {isOpen ? <PopUser /> : null}
           </nav>
         </div>
       </div>
