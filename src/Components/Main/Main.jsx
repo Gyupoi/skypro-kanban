@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { cards } from "../../../data";
 import Column from "../Column/Column";
 import { MainWrapper, MainBlock, MainContent } from "./Main.styled";
 
@@ -11,6 +12,14 @@ function Main() {
     }, 2000);
   }, []);
 
+  const statuses = [
+    "Без статуса",
+    "Нужно сделать",
+    "В работе",
+    "Тестирование",
+    "Готово",
+  ];
+
   return (
     <MainWrapper>
       <div className="container">
@@ -19,13 +28,19 @@ function Main() {
             {isLoading ? (
               <p className="loading">Данные загружаются</p>
             ) : (
-              <>
-                <Column status="Без статуса" />
-                <Column status="Нужно сделать" />
-                <Column status="В работе" />
-                <Column status="Тестирование" />
-                <Column status="Готово" />
-              </>
+              statuses.map((status) => {
+                const statusCards = cards.filter(
+                  (card) => card.status === status
+                );
+
+                return (
+                  <Column
+                    key={status}
+                    status={status}
+                    cards={statusCards}
+                  />
+                );
+              })
             )}
           </MainContent>
         </MainBlock>
