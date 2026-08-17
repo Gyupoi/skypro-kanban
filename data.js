@@ -1,0 +1,51 @@
+export const cards = [
+  {
+    id: 1,
+    topic: "Web Design",
+    title: "Название задачи 1",
+    date: "30.10.23",
+    status: "Без статуса",
+  },
+  {
+    id: 2,
+    topic: "Research",
+    title: "Название задачи 2",
+    date: "30.10.23",
+    status: "Без статуса",
+  },
+  {
+    id: 3,
+    topic: "Copywriting",
+    title: "Название задачи 3",
+    date: "30.10.23",
+    status: "Нужно сделать",
+  },
+  {
+    id: 4,
+    topic: "Research",
+    title: "Название задачи 4",
+    date: "30.10.23",
+    status: "В работе",
+  },
+  {
+    id: 5,
+    topic: "Copywriting",
+    title: "Название задачи 5",
+    date: "30.10.23",
+    status: "В работе",
+  },
+  {
+    id: 6,
+    topic: "Web Design",
+    title: "Название задачи 6",
+    date: "30.10.23",
+    status: "Тестирование",
+  },
+  {
+    id: 7,
+    topic: "Research",
+    title: "Название задачи 7",
+    date: "30.10.23",
+    status: "Готово",
+  },
+];
