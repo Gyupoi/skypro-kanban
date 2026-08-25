@@ -1,5 +1,10 @@
+import { useOutletContext } from "react-router-dom";
+import PopNewCard from "../../Components/popups/PopNewCard/PopNewCard";
+
 function NewCardPage() {
-  return <h1>Добавление задачи</h1>;
+  const { addCard } = useOutletContext();
+
+  return <PopNewCard onAddCard={addCard} />;
 }
 
 export default NewCardPage;

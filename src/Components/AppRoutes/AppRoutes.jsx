@@ -9,16 +9,32 @@ import ViewCardPage from "../../pages/ViewCardPage/ViewCardPage";
 import ExitPage from "../../pages/ExitPage/ExitPage";
 import NotFoundPage from "../../pages/NotFoundPage/NotFoundPage";
 
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<MainPage />} />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <MainPage />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path="/login" element={<LoginPage />} />
+
       <Route path="/register" element={<RegisterPage />} />
+
       <Route path="/add-card" element={<NewCardPage />} />
+
       <Route path="/edit-card/:id" element={<EditCardPage />} />
+
       <Route path="/card/:id" element={<ViewCardPage />} />
+
       <Route path="/exit" element={<ExitPage />} />
+
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

@@ -1,15 +1,26 @@
+import { Outlet } from "react-router-dom";
+import { useState } from "react";
+import { cards as initialCards } from "../../../data";
+
 import Header from "../../Components/Header/Header";
 import Main from "../../Components/Main/Main";
-import PopBrowse from "../../Components/popups/PopBrowse/PopBrowse";
-import PopNewCard from "../../Components/popups/PopNewCard/PopNewCard";
+import ExitPage from "../ExitPage/ExitPage";
 
 function MainPage() {
+  const [cards, setCards] = useState(initialCards);
+
+  const addCard = (newCard) => {
+    setCards((prevCards) => [...prevCards, newCard]);
+  };
+
   return (
     <>
-      <PopNewCard />
-      <PopBrowse />
       <Header />
-      <Main />
+      <Main cards={cards} />
+
+      <ExitPage />
+
+      <Outlet context={{ addCard }} />
     </>
   );
 }

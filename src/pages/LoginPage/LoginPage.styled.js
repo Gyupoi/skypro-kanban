@@ -43,7 +43,7 @@ export const LoginInput = styled.input`
   margin-bottom: 7px;
   padding: 8px 10px;
 
-  border: 1px solid #d4dbe5;
+  border: 1px solid ${({ $error }) => ($error ? "#FF0000" : "#d4dbe5")};
   border-radius: 8px;
   outline: none;
 
@@ -78,6 +78,11 @@ export const LoginButton = styled.button`
   &:hover {
     opacity: 0.9;
   }
+
+  &:disabled {
+    background-color: #94a6be;
+    cursor: not-allowed;
+  }
 `;
 
 export const LoginText = styled.p`
@@ -96,4 +101,10 @@ export const LoginLink = styled.a`
   color: #d4dbe5;
   text-decoration: underline;
   font-weight: 300;
+`;
+
+export const LoginError = styled.p`
+  margin: -3px 0 7px;
+  font-size: 12px;
+  color: #ff0000;
 `;

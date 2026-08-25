@@ -42,7 +42,7 @@ export const RegisterInput = styled.input`
   margin-bottom: 7px;
   padding: 8px 10px;
 
-  border: 1px solid #d4dbe5;
+  border: 1px solid ${({ $error }) => ($error ? "#FF0000" : "#d4dbe5")};
   border-radius: 8px;
   outline: none;
 
@@ -77,6 +77,11 @@ export const RegisterButton = styled.button`
   &:hover {
     opacity: 0.9;
   }
+
+  &:disabled {
+    background-color: #94a6be;
+    cursor: not-allowed;
+  }
 `;
 
 export const RegisterText = styled.p`
@@ -92,4 +97,11 @@ export const RegisterLink = styled.a`
   color: #d4dbe5;
   text-decoration: underline;
   font-weight: 300;
+`;
+
+export const RegisterError = styled.p`
+  margin: -3px 0 7px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #ff0000;
 `;
