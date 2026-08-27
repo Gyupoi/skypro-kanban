@@ -21,19 +21,16 @@ function AppRoutes() {
             <MainPage />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route path="add-card" element={<NewCardPage />} />
+        <Route path="edit-card/:id" element={<EditCardPage />} />
+        <Route path="card/:id" element={<ViewCardPage />} />
+        <Route path="exit" element={<ExitPage />} />
+      </Route>
 
       <Route path="/login" element={<LoginPage />} />
 
       <Route path="/register" element={<RegisterPage />} />
-
-      <Route path="/add-card" element={<NewCardPage />} />
-
-      <Route path="/edit-card/:id" element={<EditCardPage />} />
-
-      <Route path="/card/:id" element={<ViewCardPage />} />
-
-      <Route path="/exit" element={<ExitPage />} />
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

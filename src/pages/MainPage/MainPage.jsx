@@ -4,7 +4,6 @@ import { cards as initialCards } from "../../../data";
 
 import Header from "../../Components/Header/Header";
 import Main from "../../Components/Main/Main";
-import ExitPage from "../ExitPage/ExitPage";
 
 function MainPage() {
   const [cards, setCards] = useState(initialCards);
@@ -17,8 +16,6 @@ function MainPage() {
     <>
       <Header />
       <Main cards={cards} />
-
-      <ExitPage />
 
       <Outlet context={{ addCard }} />
     </>

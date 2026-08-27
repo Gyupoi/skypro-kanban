@@ -9,39 +9,34 @@ function ExitPage() {
   };
 
   const handleStay = () => {
-    window.location.hash = "";
+    navigate("/");
   };
 
   return (
-    <div className="pop-exit" id="popExit">
+    <div className="pop-exit _active">
       <div className="pop-exit__container">
         <div className="pop-exit__block">
           <div className="pop-exit__ttl">
             <h2>Выйти из аккаунта?</h2>
           </div>
 
-          <form
-            className="pop-exit__form"
-            onSubmit={(event) => event.preventDefault()}
-          >
-            <div className="pop-exit__form-group">
-              <button
-                type="button"
-                className="pop-exit__exit-yes _hover01"
-                onClick={handleExit}
-              >
-                Да, выйти
-              </button>
+          <div className="pop-exit__form-group">
+            <button
+              type="button"
+              className="pop-exit__exit-yes"
+              onClick={handleExit}
+            >
+              Да, выйти
+            </button>
 
-              <button
-                type="button"
-                className="pop-exit__exit-no _hover03"
-                onClick={handleStay}
-              >
-                Нет, остаться
-              </button>
-            </div>
-          </form>
+            <button
+              type="button"
+              className="pop-exit__exit-no"
+              onClick={handleStay}
+            >
+              Нет, остаться
+            </button>
+          </div>
         </div>
       </div>
     </div>
