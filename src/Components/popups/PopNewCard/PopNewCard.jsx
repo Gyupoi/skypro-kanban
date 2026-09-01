@@ -1,46 +1,70 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Calendar from "../../Calendar/Calendar";
+import { createTask } from "../../../api/api";
 
 function PopNewCard({ onAddCard }) {
   const navigate = useNavigate();
-  const [title, setTitle] = useState("");
 
-  const handleCreate = () => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleCreate = async (event) => {
+    event.preventDefault();
+
     if (!title.trim()) {
+      setError("Введите название задачи");
       return;
     }
 
-    const newCard = {
-      id: Date.now(),
-      topic: "Web Design",
-      title: title.trim(),
-      date: "24.08.26",
-      status: "Без статуса",
-    };
+    try {
+      setIsLoading(true);
+      setError("");
 
-    onAddCard(newCard);
-    navigate("/");
+      const newTask = {
+        title: title.trim(),
+        topic: "Web Design",
+        status: "Без статуса",
+        description: description.trim(),
+        date: new Date().toISOString(),
+      };
+
+      const data = await createTask(newTask);
+
+      onAddCard(data.tasks[data.tasks.length - 1]);
+
+      navigate("/");
+    } catch (error) {
+      setError(error.message || "Не удалось создать задачу");
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   return (
     <div className="pop-new-card pop-new-card-page">
       <div className="pop-new-card__container">
         <div className="pop-new-card__block">
           <div className="pop-new-card__content">
             <h3 className="pop-new-card__ttl">Создание задачи</h3>
+
             <Link to="/" className="pop-new-card__close">
               &#10006;
             </Link>
+
             <div className="pop-new-card__wrap">
               <form
                 className="pop-new-card__form form-new"
                 id="formNewCard"
-                action="#"
+                onSubmit={handleCreate}
               >
                 <div className="form-new__block">
                   <label htmlFor="formTitle" className="subttl">
                     Название задачи
                   </label>
+
                   <input
                     className="form-new__input"
                     type="text"
@@ -49,43 +73,69 @@ function PopNewCard({ onAddCard }) {
                     placeholder="Введите название задачи..."
                     autoFocus
                     value={title}
-                    onChange={(event) => setTitle(event.target.value)}
+                    onChange={(event) => {
+                      setTitle(event.target.value);
+                      setError("");
+                    }}
                   />
                 </div>
+
                 <div className="form-new__block">
                   <label htmlFor="textArea" className="subttl">
                     Описание задачи
                   </label>
+
                   <textarea
                     className="form-new__area"
                     name="text"
                     id="textArea"
                     placeholder="Введите описание задачи..."
+                    value={description}
+                    onChange={(event) => setDescription(event.target.value)}
                   ></textarea>
                 </div>
               </form>
+
               <Calendar />
             </div>
+
             <div className="pop-new-card__categories categories">
               <p className="categories__p subttl">Категория</p>
+
               <div className="categories__themes">
                 <div className="categories__theme _orange _active-category">
                   <p className="_orange">Web Design</p>
                 </div>
+
                 <div className="categories__theme _green">
                   <p className="_green">Research</p>
                 </div>
+
                 <div className="categories__theme _purple">
                   <p className="_purple">Copywriting</p>
                 </div>
               </div>
             </div>
+
+            {error && (
+              <p
+                style={{
+                  color: "red",
+                  marginBottom: "10px",
+                }}
+              >
+                {error}
+              </p>
+            )}
+
             <button
               className="form-new__create _hover01"
               id="btnCreate"
-              onClick={handleCreate}
+              type="submit"
+              form="formNewCard"
+              disabled={isLoading}
             >
-              Создать задачу
+              {isLoading ? "Создание..." : "Создать задачу"}
             </button>
           </div>
         </div>

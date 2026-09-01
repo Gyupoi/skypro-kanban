@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../../api/api";
 
 import {
   RegisterWrapper,
@@ -27,9 +28,12 @@ function RegisterPage() {
     message: "",
   });
 
-  const hasErrors = errors.name || errors.email || errors.password;
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = (event) => {
+  const hasErrors =
+    errors.name || errors.email || errors.password;
+
+  const handleRegister = async (event) => {
     event.preventDefault();
 
     const newErrors = {
@@ -54,49 +58,45 @@ function RegisterPage() {
     if (!name.trim() || !email.trim() || !password.trim()) {
       newErrors.message =
         "Введенные вами данные не корректны. Чтобы завершить регистрацию, заполните все поля в форме.";
-    }
 
-    if (name.trim() && email.trim() && password.trim()) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (!emailRegex.test(email.trim())) {
-        newErrors.email = true;
-
-        newErrors.message =
-          "Введенные вами данные не корректны. Чтобы завершить регистрацию, введите данные корректно и повторите попытку.";
-      }
-    }
-
-    if (name.trim() && email.trim() && password.trim()) {
-      const savedUser = localStorage.getItem("user");
-
-      if (savedUser) {
-        const user = JSON.parse(savedUser);
-
-        if (email.trim() === user.email) {
-          newErrors.email = true;
-
-          newErrors.message =
-            "Введенные вами данные не корректны. Чтобы завершить регистрацию, введите данные корректно и повторите попытку.";
-        }
-      }
-    }
-
-    setErrors(newErrors);
-
-    if (newErrors.name || newErrors.email || newErrors.password) {
+      setErrors(newErrors);
       return;
     }
 
-    const user = {
-      name: name.trim(),
-      email: email.trim(),
-      password,
-    };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    localStorage.setItem("user", JSON.stringify(user));
+    if (!emailRegex.test(email.trim())) {
+      newErrors.email = true;
+      newErrors.message =
+        "Введенные вами данные не корректны. Чтобы завершить регистрацию, введите данные корректно и повторите попытку.";
 
-    navigate("/login");
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setErrors(newErrors);
+
+      await registerUser(
+        email.trim(),
+        name.trim(),
+        password
+      );
+
+      navigate("/login");
+    } catch (error) {
+      setErrors({
+        name: false,
+        email: true,
+        password: true,
+        message:
+          error.message ||
+          "Не удалось зарегистрироваться. Попробуйте ещё раз.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -153,10 +153,19 @@ function RegisterPage() {
             }}
           />
 
-          {errors.message && <RegisterError>{errors.message}</RegisterError>}
+          {errors.message && (
+            <RegisterError>
+              {errors.message}
+            </RegisterError>
+          )}
 
-          <RegisterButton type="submit" disabled={hasErrors}>
-            Зарегистрироваться
+          <RegisterButton
+            type="submit"
+            disabled={isLoading || hasErrors}
+          >
+            {isLoading
+              ? "Регистрация..."
+              : "Зарегистрироваться"}
           </RegisterButton>
         </RegisterForm>
 
