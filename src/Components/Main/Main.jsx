@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { cards } from "../../../data";
 import Column from "../Column/Column";
 import { MainWrapper, MainBlock, MainContent } from "./Main.styled";
 
-function Main() {
+function Main({ cards }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,15 +29,11 @@ function Main() {
             ) : (
               statuses.map((status) => {
                 const statusCards = cards.filter(
-                  (card) => card.status === status
+                  (card) => card.status === status,
                 );
 
                 return (
-                  <Column
-                    key={status}
-                    status={status}
-                    cards={statusCards}
-                  />
+                  <Column key={status} status={status} cards={statusCards} />
                 );
               })
             )}

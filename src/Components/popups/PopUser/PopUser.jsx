@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import {
   PopUserWrapper,
   UserName,
@@ -19,7 +21,7 @@ function PopUser() {
       </UserTheme>
 
       <ExitButton type="button">
-        <a href="#popExit">Выйти</a>
+        <Link to="/exit">Выйти</Link>
       </ExitButton>
     </PopUserWrapper>
   );

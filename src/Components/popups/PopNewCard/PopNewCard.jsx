@@ -1,15 +1,36 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Calendar from "../../Calendar/Calendar";
 
-function PopNewCard() {
+function PopNewCard({ onAddCard }) {
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
+
+  const handleCreate = () => {
+    if (!title.trim()) {
+      return;
+    }
+
+    const newCard = {
+      id: Date.now(),
+      topic: "Web Design",
+      title: title.trim(),
+      date: "24.08.26",
+      status: "Без статуса",
+    };
+
+    onAddCard(newCard);
+    navigate("/");
+  };
   return (
-    <div className="pop-new-card" id="popNewCard">
+    <div className="pop-new-card pop-new-card-page">
       <div className="pop-new-card__container">
         <div className="pop-new-card__block">
           <div className="pop-new-card__content">
             <h3 className="pop-new-card__ttl">Создание задачи</h3>
-            <a href="#" className="pop-new-card__close">
+            <Link to="/" className="pop-new-card__close">
               &#10006;
-            </a>
+            </Link>
             <div className="pop-new-card__wrap">
               <form
                 className="pop-new-card__form form-new"
@@ -27,6 +48,8 @@ function PopNewCard() {
                     id="formTitle"
                     placeholder="Введите название задачи..."
                     autoFocus
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
                   />
                 </div>
                 <div className="form-new__block">
@@ -57,7 +80,11 @@ function PopNewCard() {
                 </div>
               </div>
             </div>
-            <button className="form-new__create _hover01" id="btnCreate">
+            <button
+              className="form-new__create _hover01"
+              id="btnCreate"
+              onClick={handleCreate}
+            >
               Создать задачу
             </button>
           </div>

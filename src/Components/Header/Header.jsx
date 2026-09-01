@@ -8,6 +8,7 @@ import {
   HeaderUser,
 } from "./Header.styled";
 import PopUser from "../popups/PopUser/PopUser";
+import { Link } from "react-router-dom";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +29,13 @@ function Header() {
           </div>
           <HeaderNav>
             <HeaderNewButton>
-              <a href="#popNewCard">Создать новую задачу</a>
+              <Link
+                to="/add-card"
+                className="header__btn-main-new"
+                id="btnMainNew"
+              >
+                Создать новую задачу
+              </Link>
             </HeaderNewButton>
             <HeaderUser onClick={() => setIsOpen(!isOpen)}>
               Ivan Ivanov
