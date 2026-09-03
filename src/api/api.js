@@ -13,29 +13,44 @@ const getAuthHeaders = () => {
   };
 };
 
-const getJsonAuthHeaders = () => {
-  const token = getToken();
-
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
-};
-
 export const loginUser = async (login, password) => {
-  const body = { login, password };
-  console.log("LOGIN BODY:", body);
+  const body = {
+    login,
+    password,
+  };
+
   const response = await fetch(`${USER_API_URL}/login`, {
     method: "POST",
     body: JSON.stringify(body),
   });
+
   const data = await response.json();
-  console.log("LOGIN STATUS:", response.status);
-  console.log("LOGIN RESPONSE:", data);
+
   if (!response.ok) {
     throw new Error(data.error || data.message || "Ошибка авторизации");
   }
+
   return data;
+};
+
+export const getTasks = async () => {
+  const response = await fetch(API_URL, {
+    method: "GET",
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || data.message || "Не удалось получить задачи");
+  }
+
+  return {
+    tasks: data.tasks.map((task) => ({
+      ...task,
+      id: task._id,
+    })),
+  };
 };
 
 export const getTask = async (id) => {
@@ -125,19 +140,24 @@ export const deleteTask = async (id) => {
 };
 
 export const registerUser = async (login, name, password) => {
-  const body = { login, name, password };
-  console.log("REGISTER BODY:", body);
+  const body = {
+    login,
+    name,
+    password,
+  };
+
   const response = await fetch(USER_API_URL, {
     method: "POST",
     body: JSON.stringify(body),
   });
+
   const data = await response.json();
-  console.log("REGISTER STATUS:", response.status);
-  console.log("REGISTER RESPONSE:", data);
+
   if (!response.ok) {
     throw new Error(
       data.error || data.message || "Не удалось зарегистрироваться",
     );
   }
+
   return data;
 };

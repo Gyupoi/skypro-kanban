@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 function ExitPage() {
   const navigate = useNavigate();
 
-  const handleExit = () => {
-    localStorage.removeItem("isAuthenticated");
-    navigate("/login");
-  };
+const handleExit = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("isAuthenticated");
+  navigate("/login");
+};
 
   const handleStay = () => {
     navigate("/");
