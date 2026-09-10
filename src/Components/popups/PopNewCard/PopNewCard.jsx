@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Calendar from "../../Calendar/Calendar";
-import { createTask } from "../../../api/api";
+import { useTasks } from "../../../context/TaskContext";
 
-function PopNewCard({ onAddCard }) {
+function PopNewCard() {
   const navigate = useNavigate();
+  const { addCard } = useTasks();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -31,9 +32,7 @@ function PopNewCard({ onAddCard }) {
         date: new Date().toISOString(),
       };
 
-      const data = await createTask(newTask);
-
-      onAddCard(data.tasks[data.tasks.length - 1]);
+      await addCard(newTask);
 
       navigate("/");
     } catch (error) {

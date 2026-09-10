@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../../api/api";
+import { useAuth } from "../../context/AuthContext";
 
 import {
   LoginWrapper,
@@ -16,6 +16,7 @@ import {
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -60,10 +61,7 @@ function LoginPage() {
     try {
       setIsLoading(true);
 
-      const data = await loginUser(email.trim(), password);
-
-      localStorage.setItem("token", data.user.token);
-      localStorage.setItem("isAuthenticated", "true");
+      await login(email.trim(), password);
 
       navigate("/");
     } catch (error) {
@@ -125,7 +123,10 @@ function LoginPage() {
             <LoginError>{errors.passwordMessage}</LoginError>
           )}
 
-          <LoginButton type="submit" disabled={isLoading || Boolean(hasErrors)}>
+          <LoginButton
+            type="submit"
+            disabled={isLoading || Boolean(hasErrors)}
+          >
             {isLoading ? "Вход..." : "Войти"}
           </LoginButton>
         </LoginForm>
