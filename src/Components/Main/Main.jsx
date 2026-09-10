@@ -1,16 +1,7 @@
-import { useEffect, useState } from "react";
 import Column from "../Column/Column";
 import { MainWrapper, MainBlock, MainContent } from "./Main.styled";
 
-function Main({ cards }) {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, []);
-
+function Main({ cards, isLoading, error }) {
   const statuses = [
     "Без статуса",
     "Нужно сделать",
@@ -26,14 +17,20 @@ function Main({ cards }) {
           <MainContent>
             {isLoading ? (
               <p className="loading">Данные загружаются</p>
+            ) : error ? (
+              <p className="loading">{error}</p>
             ) : (
               statuses.map((status) => {
                 const statusCards = cards.filter(
-                  (card) => card.status === status,
+                  (card) => card.status === status
                 );
 
                 return (
-                  <Column key={status} status={status} cards={statusCards} />
+                  <Column
+                    key={status}
+                    status={status}
+                    cards={statusCards}
+                  />
                 );
               })
             )}

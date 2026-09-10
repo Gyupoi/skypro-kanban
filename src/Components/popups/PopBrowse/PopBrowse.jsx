@@ -1,11 +1,16 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useState } from "react";
 import Calendar from "../../Calendar/Calendar";
+import { updateTask, deleteTask } from "../../../api/api";
 
 function PopBrowse({ card, edit = false }) {
   const navigate = useNavigate();
+  const { setCards } = useOutletContext();
 
   const [status, setStatus] = useState(card?.status || "Без статуса");
+  const [description, setDescription] = useState(card?.description || "");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   if (!card) {
     return null;
@@ -19,17 +24,57 @@ function PopBrowse({ card, edit = false }) {
     "Готово",
   ];
 
+  const handleSave = async () => {
+    try {
+      setIsLoading(true);
+      setError("");
+
+      const updatedTask = {
+        title: card.title,
+        topic: card.topic,
+        status,
+        description,
+        date: card.date,
+      };
+
+      const data = await updateTask(card.id, updatedTask);
+
+      setCards(data.tasks);
+
+      navigate(`/card/${card.id}`);
+    } catch (error) {
+      setError(error.message || "Не удалось изменить задачу");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      setIsLoading(true);
+      setError("");
+
+      await deleteTask(card.id);
+
+      setCards((prevCards) =>
+        prevCards.filter((item) => item.id !== card.id)
+      );
+
+      navigate("/");
+    } catch (error) {
+      setError(error.message || "Не удалось удалить задачу");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="pop-browse _active" id="popBrowse">
       <div className="pop-browse__container">
         <div className="pop-browse__block">
           <div className="pop-browse__content">
-
-            {/* Заголовок */}
             <div className="pop-browse__top-block">
-              <h3 className="pop-browse__ttl">
-                {card.title}
-              </h3>
+              <h3 className="pop-browse__ttl">{card.title}</h3>
 
               <div
                 className={`categories__theme theme-top _${getTopicClass(
@@ -40,7 +85,6 @@ function PopBrowse({ card, edit = false }) {
               </div>
             </div>
 
-            {/* Статус */}
             <div className="pop-browse__status status">
               <p className="status__p subttl">Статус</p>
 
@@ -54,6 +98,7 @@ function PopBrowse({ card, edit = false }) {
                         status === item ? "_active" : ""
                       }`}
                       onClick={() => setStatus(item)}
+                      disabled={isLoading}
                     >
                       <p>{item}</p>
                     </button>
@@ -71,9 +116,7 @@ function PopBrowse({ card, edit = false }) {
               </div>
             </div>
 
-            {/* Описание + календарь */}
             <div className="pop-browse__wrap">
-
               <form
                 className="pop-browse__form form-browse"
                 id="formBrowseCard"
@@ -93,15 +136,17 @@ function PopBrowse({ card, edit = false }) {
                     id="textArea01"
                     readOnly={!edit}
                     placeholder="Введите описание задачи..."
+                    value={description}
+                    onChange={(event) =>
+                      setDescription(event.target.value)
+                    }
                   />
                 </div>
               </form>
 
               <Calendar />
-
             </div>
 
-            {/* Категория на мобильной версии */}
             <div className="theme-down__categories theme-down">
               <p className="categories__p subttl">
                 Категория
@@ -116,11 +161,20 @@ function PopBrowse({ card, edit = false }) {
               </div>
             </div>
 
-            {/* Просмотр */}
+            {error && (
+              <p
+                style={{
+                  color: "red",
+                  marginBottom: "10px",
+                }}
+              >
+                {error}
+              </p>
+            )}
+
             {!edit && (
               <div className="pop-browse__btn-browse">
                 <div className="btn-group">
-
                   <button
                     type="button"
                     className="btn-browse__edit _btn-bor _hover03"
@@ -134,32 +188,38 @@ function PopBrowse({ card, edit = false }) {
                   <button
                     type="button"
                     className="btn-browse__delete _btn-bor _hover03"
+                    onClick={handleDelete}
+                    disabled={isLoading}
                   >
-                    Удалить задачу
+                    {isLoading
+                      ? "Удаление..."
+                      : "Удалить задачу"}
                   </button>
-
                 </div>
 
                 <button
                   type="button"
                   className="btn-browse__close _btn-bg _hover01"
                   onClick={() => navigate("/")}
+                  disabled={isLoading}
                 >
                   Закрыть
                 </button>
               </div>
             )}
 
-            {/* Редактирование */}
             {edit && (
               <div className="pop-browse__btn-edit">
                 <div className="btn-group">
-
                   <button
                     type="button"
                     className="btn-edit__edit _btn-bg _hover01"
+                    onClick={handleSave}
+                    disabled={isLoading}
                   >
-                    Сохранить
+                    {isLoading
+                      ? "Сохранение..."
+                      : "Сохранить"}
                   </button>
 
                   <button
@@ -168,6 +228,7 @@ function PopBrowse({ card, edit = false }) {
                     onClick={() =>
                       navigate(`/card/${card.id}`)
                     }
+                    disabled={isLoading}
                   >
                     Отменить
                   </button>
@@ -175,22 +236,25 @@ function PopBrowse({ card, edit = false }) {
                   <button
                     type="button"
                     className="btn-edit__delete _btn-bor _hover03"
+                    onClick={handleDelete}
+                    disabled={isLoading}
                   >
-                    Удалить задачу
+                    {isLoading
+                      ? "Удаление..."
+                      : "Удалить задачу"}
                   </button>
-
                 </div>
 
                 <button
                   type="button"
                   className="btn-edit__close _btn-bg _hover01"
                   onClick={() => navigate("/")}
+                  disabled={isLoading}
                 >
                   Закрыть
                 </button>
               </div>
             )}
-
           </div>
         </div>
       </div>

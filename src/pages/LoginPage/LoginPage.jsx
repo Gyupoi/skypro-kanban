@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/api";
 
 import {
   LoginWrapper,
@@ -26,12 +27,12 @@ function LoginPage() {
     passwordMessage: "",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const hasErrors = errors.email || errors.password;
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-
-    const user = JSON.parse(localStorage.getItem("user"));
 
     const newErrors = {
       email: false,
@@ -42,20 +43,12 @@ function LoginPage() {
 
     if (!email.trim()) {
       newErrors.email = true;
+      newErrors.emailMessage = "Введите эл. почту";
     }
 
     if (!password.trim()) {
       newErrors.password = true;
-    }
-
-    if (email.trim() && password.trim()) {
-      if (!user || email !== user.email || password !== user.password) {
-        newErrors.email = true;
-        newErrors.password = true;
-
-        newErrors.passwordMessage =
-          "Введенные вами данные не распознаны. Проверьте свой логин и пароль и повторите попытку входа.";
-      }
+      newErrors.passwordMessage = "Введите пароль";
     }
 
     setErrors(newErrors);
@@ -64,9 +57,26 @@ function LoginPage() {
       return;
     }
 
-    localStorage.setItem("isAuthenticated", "true");
+    try {
+      setIsLoading(true);
 
-    navigate("/");
+      const data = await loginUser(email.trim(), password);
+
+      localStorage.setItem("token", data.user.token);
+      localStorage.setItem("isAuthenticated", "true");
+
+      navigate("/");
+    } catch (error) {
+      setErrors({
+        email: true,
+        password: true,
+        emailMessage: "",
+        passwordMessage:
+          "Введенные вами данные не распознаны. Проверьте свой логин и пароль и повторите попытку входа.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -76,7 +86,7 @@ function LoginPage() {
 
         <LoginForm onSubmit={handleLogin}>
           <LoginInput
-            type="email"
+            type="text"
             placeholder="Эл. почта"
             value={email}
             $error={errors.email}
@@ -115,8 +125,8 @@ function LoginPage() {
             <LoginError>{errors.passwordMessage}</LoginError>
           )}
 
-          <LoginButton type="submit" disabled={Boolean(hasErrors)}>
-            Войти
+          <LoginButton type="submit" disabled={isLoading || Boolean(hasErrors)}>
+            {isLoading ? "Вход..." : "Войти"}
           </LoginButton>
         </LoginForm>
 
