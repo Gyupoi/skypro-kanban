@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 import {
   PopUserWrapper,
@@ -9,11 +10,13 @@ import {
 } from "./PopUser.styled";
 
 function PopUser() {
+  const { user } = useAuth();
+
   return (
     <PopUserWrapper>
-      <UserName>Ivan Ivanov</UserName>
+      <UserName>{user?.name || "Пользователь"}</UserName>
 
-      <UserMail>ivan.ivanov@gmail.com</UserMail>
+      <UserMail>{user?.login || "Почта не указана"}</UserMail>
 
       <UserTheme>
         <p>Темная тема</p>

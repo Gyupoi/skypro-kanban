@@ -89,12 +89,12 @@ export const RegisterText = styled.p`
 
   text-align: center;
   font-size: 14px;
-  color: #d4dbe5;
+  color: #94A6BE;
   font-weight: 300;
 `;
 
 export const RegisterLink = styled.a`
-  color: #d4dbe5;
+  color: #94A6BE;
   text-decoration: underline;
   font-weight: 300;
 `;
