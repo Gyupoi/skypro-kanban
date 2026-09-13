@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 function ExitPage() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
-const handleExit = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("isAuthenticated");
-  navigate("/login");
-};
+  const handleExit = () => {
+    logout();
+    navigate("/login");
+  };
 
   const handleStay = () => {
     navigate("/");

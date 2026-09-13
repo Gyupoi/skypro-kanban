@@ -1,14 +1,18 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Calendar from "../../Calendar/Calendar";
-import { updateTask, deleteTask } from "../../../api/api";
+import { useTasks } from "../../../context/TaskContext";
 
 function PopBrowse({ card, edit = false }) {
   const navigate = useNavigate();
-  const { setCards } = useOutletContext();
+  const { removeCard, updateCard } = useTasks();
 
-  const [status, setStatus] = useState(card?.status || "Без статуса");
-  const [description, setDescription] = useState(card?.description || "");
+  const [status, setStatus] = useState(
+    card?.status || "Без статуса"
+  );
+  const [description, setDescription] = useState(
+    card?.description || ""
+  );
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,13 +41,13 @@ function PopBrowse({ card, edit = false }) {
         date: card.date,
       };
 
-      const data = await updateTask(card.id, updatedTask);
-
-      setCards(data.tasks);
+      await updateCard(card.id, updatedTask);
 
       navigate(`/card/${card.id}`);
     } catch (error) {
-      setError(error.message || "Не удалось изменить задачу");
+      setError(
+        error.message || "Не удалось изменить задачу"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -54,15 +58,13 @@ function PopBrowse({ card, edit = false }) {
       setIsLoading(true);
       setError("");
 
-      await deleteTask(card.id);
-
-      setCards((prevCards) =>
-        prevCards.filter((item) => item.id !== card.id)
-      );
+      await removeCard(card.id);
 
       navigate("/");
     } catch (error) {
-      setError(error.message || "Не удалось удалить задачу");
+      setError(
+        error.message || "Не удалось удалить задачу"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -74,7 +76,9 @@ function PopBrowse({ card, edit = false }) {
         <div className="pop-browse__block">
           <div className="pop-browse__content">
             <div className="pop-browse__top-block">
-              <h3 className="pop-browse__ttl">{card.title}</h3>
+              <h3 className="pop-browse__ttl">
+                {card.title}
+              </h3>
 
               <div
                 className={`categories__theme theme-top _${getTopicClass(

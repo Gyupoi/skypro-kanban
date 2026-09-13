@@ -1,32 +1,10 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PopBrowse from "../../Components/popups/PopBrowse/PopBrowse";
-import { getTask } from "../../api/api";
+import { useTasks } from "../../context/TaskContext";
 
 function ViewCardPage() {
   const { id } = useParams();
-
-  const [card, setCard] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const loadTask = async () => {
-      try {
-        setIsLoading(true);
-
-        const data = await getTask(id);
-
-        setCard(data.task);
-      } catch (error) {
-        setError(error.message || "Не удалось загрузить задачу");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadTask();
-  }, [id]);
+  const { cards, isLoading, error } = useTasks();
 
   if (isLoading) {
     return <p>Данные загружаются...</p>;
@@ -36,8 +14,10 @@ function ViewCardPage() {
     return <p>{error}</p>;
   }
 
+  const card = cards.find((item) => item.id === id);
+
   if (!card) {
-    return null;
+    return <p>Задача не найдена</p>;
   }
 
   return <PopBrowse card={card} />;
