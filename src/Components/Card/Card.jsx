@@ -12,6 +12,12 @@ import {
 } from "./Card.styled";
 
 function Card({ card }) {
+  const formattedDate = new Date(card.date).toLocaleString("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+
   return (
     <CardItem>
       <CardWrapper>
@@ -57,7 +63,7 @@ function Card({ card }) {
               />
             </svg>
 
-            <p>{card.date}</p>
+            <p>{formattedDate}</p>
           </CardDate>
         </CardContent>
       </CardWrapper>

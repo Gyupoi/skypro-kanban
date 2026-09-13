@@ -89,7 +89,7 @@ export const LoginText = styled.p`
   margin-top: 20px;
   text-align: center;
   font-size: 14px;
-  color: #d4dbe5;
+  color: #94A6BE;
   font-weight: 300;
 `;
 
@@ -98,7 +98,7 @@ export const LoginLink = styled.a`
   margin-top: 5px;
   text-align: center;
   font-size: 14px;
-  color: #d4dbe5;
+  color: #94A6BE;
   text-decoration: underline;
   font-weight: 300;
 `;
