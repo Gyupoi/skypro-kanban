@@ -1,7 +1,34 @@
 import Column from "../Column/Column";
 import { MainWrapper, MainBlock, MainContent } from "./Main.styled";
 
-function Main({ cards, isLoading, error }) {
+function SkeletonCard() {
+  return (
+    <div className="skeleton-card">
+      <div className="skeleton-line skeleton-line-small"></div>
+      <div className="skeleton-line skeleton-line-title"></div>
+      <div className="skeleton-line skeleton-line-date"></div>
+    </div>
+  );
+}
+
+function SkeletonColumn({ cards }) {
+  return (
+    <div className="skeleton-column">
+      <div className="skeleton-column-title"></div>
+
+      {cards.map((card, index) => (
+        <SkeletonCard key={card._id || index} />
+      ))}
+    </div>
+  );
+}
+
+function Main({
+  cards,
+  isLoading,
+  error,
+  skeletonCards,
+}) {
   const statuses = [
     "Без статуса",
     "Нужно сделать",
@@ -16,7 +43,18 @@ function Main({ cards, isLoading, error }) {
         <MainBlock>
           <MainContent>
             {isLoading ? (
-              <p className="loading">Данные загружаются</p>
+              statuses.map((status) => {
+                const statusCards = skeletonCards.filter(
+                  (card) => card.status === status
+                );
+
+                return (
+                  <SkeletonColumn
+                    key={status}
+                    cards={statusCards}
+                  />
+                );
+              })
             ) : error ? (
               <p className="loading">{error}</p>
             ) : (
