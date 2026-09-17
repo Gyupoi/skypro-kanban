@@ -5,13 +5,23 @@ import Main from "../../Components/Main/Main";
 import { useTasks } from "../../context/TaskContext";
 
 function MainPage() {
-  const { cards, isLoading, error } = useTasks();
+  const {
+    cards,
+    isLoading,
+    error,
+    skeletonCards,
+  } = useTasks();
 
   return (
     <>
       <Header />
 
-      <Main cards={cards} isLoading={isLoading} error={error} />
+      <Main
+        cards={cards}
+        isLoading={isLoading}
+        error={error}
+        skeletonCards={skeletonCards}
+      />
 
       <Outlet />
     </>

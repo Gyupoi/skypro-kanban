@@ -9,6 +9,7 @@ function PopNewCard() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [topic, setTopic] = useState("Web Design");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,7 +27,7 @@ function PopNewCard() {
 
       const newTask = {
         title: title.trim(),
-        topic: "Web Design",
+        topic,
         status: "Без статуса",
         description: description.trim(),
         date: new Date().toISOString(),
@@ -90,7 +91,9 @@ function PopNewCard() {
                     id="textArea"
                     placeholder="Введите описание задачи..."
                     value={description}
-                    onChange={(event) => setDescription(event.target.value)}
+                    onChange={(event) =>
+                      setDescription(event.target.value)
+                    }
                   ></textarea>
                 </div>
               </form>
@@ -102,17 +105,38 @@ function PopNewCard() {
               <p className="categories__p subttl">Категория</p>
 
               <div className="categories__themes">
-                <div className="categories__theme _orange _active-category">
+                <button
+                  type="button"
+                  className={`categories__theme _orange ${
+                    topic === "Web Design" ? "_active-category" : ""
+                  }`}
+                  onClick={() => setTopic("Web Design")}
+                  disabled={isLoading}
+                >
                   <p className="_orange">Web Design</p>
-                </div>
+                </button>
 
-                <div className="categories__theme _green">
+                <button
+                  type="button"
+                  className={`categories__theme _green ${
+                    topic === "Research" ? "_active-category" : ""
+                  }`}
+                  onClick={() => setTopic("Research")}
+                  disabled={isLoading}
+                >
                   <p className="_green">Research</p>
-                </div>
+                </button>
 
-                <div className="categories__theme _purple">
+                <button
+                  type="button"
+                  className={`categories__theme _purple ${
+                    topic === "Copywriting" ? "_active-category" : ""
+                  }`}
+                  onClick={() => setTopic("Copywriting")}
+                  disabled={isLoading}
+                >
                   <p className="_purple">Copywriting</p>
-                </div>
+                </button>
               </div>
             </div>
 
